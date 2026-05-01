@@ -1,4 +1,4 @@
-# 🚨 Supply Chain Disruption Intelligence
+#  Supply Chain Disruption Intelligence
 
 > Real-time supplier risk monitoring — detects geopolitical events, weather anomalies, and port disruptions before they hit your business.
 
@@ -11,7 +11,7 @@
 
 ---
 
-## 🧠 The Problem
+##  The Problem
 
 Modern businesses depend on complex supplier networks they can't see. A port closure in Rotterdam, a typhoon in Taiwan, a geopolitical escalation in the Red Sea — these events take weeks to surface as delivery delays. By then, it's too late.
 
@@ -19,7 +19,7 @@ Modern businesses depend on complex supplier networks they can't see. A port clo
 
 ---
 
-## ✨ Features
+##  Features
 
 - **Multi-source real-time pipeline** — ingests NewsAPI, Open-Meteo weather, MarineTraffic port data, and Twitter/X signals via Celery beat scheduling
 - **LLM-powered entity extraction** — uses spaCy NER + Claude API to map raw news events to specific supplier nodes in your supply graph
@@ -30,7 +30,7 @@ Modern businesses depend on complex supplier networks they can't see. A port clo
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -132,7 +132,7 @@ supply-chain-intelligence/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -194,7 +194,7 @@ ANTHROPIC_API_KEY=your-anthropic-key
 
 ---
 
-## 🔄 Pipeline Flow
+##  Pipeline Flow
 
 The pipeline runs on a Celery beat schedule. Each source has its own polling interval:
 
@@ -224,7 +224,7 @@ Each event is scored 0–100 for disruption severity by an XGBoost model trained
 
 ---
 
-## 🗂️ API Endpoints
+##  API Endpoints
 
 ```
 GET  /api/events/              # Paginated raw events feed
@@ -239,7 +239,7 @@ WS   /ws/alerts/               # WebSocket — live alert push
 
 ---
 
-## 🧪 Running Tests
+##  Running Tests
 
 ```bash
 # Run all tests
@@ -254,7 +254,7 @@ docker-compose exec backend pytest --cov=apps --cov-report=html
 
 ---
 
-## 🗺️ Roadmap
+##  Roadmap
 
 - [x] Multi-source ingestion pipeline (NewsAPI, Open-Meteo, MarineTraffic, Twitter/X)
 - [x] Redis deduplication layer
@@ -269,23 +269,9 @@ docker-compose exec backend pytest --cov=apps --cov-report=html
 
 ---
 
-## 🤝 Contributing
 
-This project is under active development. Issues and PRs welcome.
 
-```bash
-# Create a feature branch
-git checkout -b feature/your-feature-name
-
-# Run tests before pushing
-pytest
-
-# Submit a PR with a clear description of what changed and why
-```
-
----
-
-## 📄 License
+##  License
 
 MIT License — see [LICENSE](LICENSE) for details.
 

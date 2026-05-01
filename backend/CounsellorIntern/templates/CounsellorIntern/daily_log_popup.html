@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Log - Counsellor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4; /* cyan */
+            --accent-2: #7c3aed; /* purple */
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(180deg,#f8fdff 0%, #fffaf0 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        /* Modal content */
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        /* Form field styling */
+        .field input,
+        .field select {
+            border: 1px solid rgba(15,23,42,0.1);
+            background: rgba(255,255,255,0.9);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        .field input:focus,
+        .field select:focus {
+            border: 1px solid var(--accent-2);
+            background: white;
+            box-shadow: 0 0 8px rgba(124,58,237,0.2);
+        }
+        
+        /* Checkbox styling */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 1px solid rgba(15,23,42,0.1);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.9);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox-container:hover {
+            border-color: var(--accent-2);
+            background: rgba(124,58,237,0.05);
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-2);
+        }
+        
+        .checkbox-container input[type="checkbox"]:checked + label {
+            color: var(--accent-2);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="px-8 py-6 border-b border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Daily Log Entry</h2>
+                        <p class="text-sm text-gray-500 mt-1">Record your attendance and working hours</p>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                        <span class="material-symbols-outlined text-gray-600 text-sm">close</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <div class="px-8 py-6">
+                <!-- Display Messages -->
+                {% if messages %}
+                    <div class="mb-6">
+                        {% for message in messages %}
+                            <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% else %}bg-green-100 border border-green-400 text-green-700{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Display form errors if any -->
+                    {% if form.non_field_errors %}
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-red-500">error</span>
+                                <div class="text-red-700 text-sm">
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+                    <!-- Present Status -->
+                    <div class="field">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            ✅ Attendance Status
+                        </label>
+                        <div class="checkbox-container" onclick="toggleCheckbox()">
+                            {{ form.present }}
+                            <label for="{{ form.present.id_for_label }}" class="text-gray-700 cursor-pointer">
+                                I am present today
+                            </label>
+                        </div>
+                        {% if form.present.errors %}
+                            <div class="text-red-500 text-xs mt-1">
+                                {% for error in form.present.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Working Day Type -->
+                    <div class="field">
+                        <label for="{{ form.working_day.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                            ⏰ Working Day Type
+                        </label>
+                        {{ form.working_day }}
+                        {% if form.working_day.errors %}
+                            <div class="text-red-500 text-xs mt-1">
+                                {% for error in form.working_day.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-3 pt-4">
+                        <button type="button" onclick="closeModal()" class="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                            Cancel
+                        </button>
+                        <button type="submit" class="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-lg hover:from-cyan-600 hover:to-purple-700 transition-all font-medium shadow-sm hover:shadow-md">
+                            Save Log
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Close modal function
+        function closeModal() {
+            window.close();
+        }
+
+        // Toggle checkbox when container is clicked
+        function toggleCheckbox() {
+            const checkbox = document.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+        }
+
+
+        // Form submission handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Show loading state
+            submitBtn.textContent = 'Saving...';
+            submitBtn.disabled = true;
+        });
+
+        // Enhanced input animations
+        const inputs = document.querySelectorAll('.field input, .field select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

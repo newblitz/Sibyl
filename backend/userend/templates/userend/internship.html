@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Internship & Job Opportunities</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4;
+            --accent-2: #7c3aed;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        .job-card{
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .job-card:hover{
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        .badge{
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-remote{
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-onsite{
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .badge-counsellor{
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+        .badge-intern{
+            background: #dcfce7;
+            color: #166534;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <div class="max-w-7xl mx-auto mb-6">
+            {% if request.user.user_type == 'Counsellor' %}
+            <a href="{% url 'loging:counsellor' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-all backdrop-blur-sm">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Back to Home
+            </a>
+            {% elif request.user.user_type == 'Patient' %}
+            <a href="{% url 'userend:home' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-all backdrop-blur-sm">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Back to Home
+            </a>
+            <!-- {% elif request.user.user_type == 'intern' %}
+            <a href="{% url 'loging:intern' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-all backdrop-blur-sm">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Back to Home
+            </a> -->
+            {% elif request.user.user_type == 'HR' %}
+            <a href="{% url 'loging:hr_dashboard' %}" class="inline-flex items-center gap-2 px-4 py-2 bg-white bg-opacity-20 text-white rounded-lg hover:bg-opacity-30 transition-all backdrop-blur-sm">
+                <span class="material-symbols-outlined text-sm">arrow_back</span>
+                Back to Home
+            </a>
+            {% endif %}
+        </div>
+        
+        <!-- Header -->
+        <div class="max-w-7xl mx-auto mb-12 text-center">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-white shadow-lg">
+                    <span class="material-symbols-outlined text-purple-600 text-2xl">psychology</span>
+                </div>
+                <h1 class="text-4xl font-bold text-white">MindEase Careers</h1>
+            </div>
+            <p class="text-xl text-white text-opacity-90">Join our team and make a difference in mental health care</p>
+        </div>
+
+        <!-- Job Listings -->
+        <div class="max-w-7xl mx-auto">
+            {% if jobs %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for job in jobs %}
+                <div class="job-card p-6">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">{{ job.job_title }}</h3>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <span class="badge {% if job.job_type == 'Counsellor' %}badge-counsellor{% else %}badge-intern{% endif %}">{{ job.job_type }}</span>
+                                <span class="badge {% if job.job_location == 'Remote' %}badge-remote{% else %}badge-onsite{% endif %}">{{ job.job_location }}</span>
+                            </div>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white">work</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ job.job_description|truncatewords:20 }}</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <span class="material-symbols-outlined text-sm">payments</span>
+                            <span>₹{{ job.job_salary }}/month</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <span class="material-symbols-outlined text-sm">schedule</span>
+                            <span>{{ job.job_duration }} months</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <span class="material-symbols-outlined text-sm">work_history</span>
+                            <span>{{ job.job_experience }} years exp.</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-gray-600">
+                            <span class="material-symbols-outlined text-sm">event</span>
+                            <span>Apply by {{ job.last_date_to_apply|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3">
+                        <a href="{% url 'userend:apply_job' job.id %}" class="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all text-center font-medium">
+                            Apply Now
+                        </a>
+                        <button onclick="viewDetails({{ job.id }})" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                            <span class="material-symbols-outlined text-sm">info</span>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- No Jobs Available - Load Default View -->
+            {% include 'userend/internship_default.html' %}
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function viewDetails(jobId) {
+            alert('Job details for ID: ' + jobId);
+        }
+    </script>
+</body>
+</html>
+

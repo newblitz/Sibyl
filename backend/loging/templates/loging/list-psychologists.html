@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Our Psychologists</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4; /* cyan */
+            --accent-2: #7c3aed; /* purple */
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(180deg,#f8fdff 0%, #fffaf0 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        .panel{
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+            border: 1px solid rgba(124,58,237,0.08);
+            box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+            backdrop-filter: blur(6px) saturate(120%);
+            border-radius: 20px;
+        }
+        .accent-btn{
+            background-image: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+            color: white;
+        }
+        .hero-shape{position:absolute;right:-8%;top:-12%;width:520px;height:520px;border-radius:50%;background:linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08));filter:blur(30px);pointer-events:none}
+        @media (max-width:640px){.hero-shape{display:none}}
+        
+        .psychologist-card {
+            transition: all 0.3s ease;
+        }
+        .psychologist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(16,24,40,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="w-full py-6 px-6 md:px-12 flex items-center justify-between">
+            <a href="{% url 'userend:home' %}" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 3.5a5.5 5.5 0 0 1 6 0l1.5 1a3.5 3.5 0 0 1 1.5 3v3a5.5 5.5 0 0 1-2.5 4.5l-1.5 1a3.5 3.5 0 0 1-4 0l-1.5-1A5.5 5.5 0 0 1 6 10.5v-3a3.5 3.5 0 0 1 1.5-3L9 3.5z" fill="white" opacity="0.95"/>
+                        <path d="M12 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                        <path d="M12 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-800 text-lg">MindEase</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm text-gray-600">
+                <!-- <a href="{% url 'loging:how-it-works' %}" class="hover:text-gray-800">How it works</a> -->
+                <a href="{% url 'loging:list-psychologists' %}" class="text-purple-600 font-medium">Psychologists</a>
+                <a href="{% url 'userend:internship' %}" class="hover:text-gray-800">Careers</a>
+                <a href="{% url 'loging:CreateAccount' %}" class="px-4 py-2 rounded-lg border border-transparent hover:border-gray-200">Get Started</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                {% if user.is_authenticated %}
+                    <span class="text-gray-600">Welcome, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'loging:logout' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">Logout</a>
+                {% else %}
+                    <a href="{% url 'loging:loginView' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800">Sign in</a>
+                    <a href="{% url 'loging:CreateAccount' %}" class="px-4 py-2 rounded-lg accent-btn text-white font-medium">Sign up</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="flex-grow relative px-6">
+            <div class="hero-shape"></div>
+
+            <div class="max-w-7xl mx-auto pt-20 pb-20">
+                <!-- Hero Section -->
+                <div class="text-center mb-16">
+                    <h1 class="text-5xl md:text-6xl font-bold text-gray-800 leading-tight mb-6">
+                        Meet Our 
+                        <span class="bg-gradient-to-r from-cyan-500 to-purple-600 bg-clip-text text-transparent">Expert Team</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        Our licensed psychologists and therapists are here to support you on your mental health journey. 
+                        Each professional brings unique expertise and a compassionate approach to care.
+                    </p>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="panel p-6 mb-12">
+                    <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div class="flex flex-wrap gap-4">
+                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                                <option>All Specializations</option>
+                                <option>Anxiety & Depression</option>
+                                <option>Trauma & PTSD</option>
+                                <option>Relationship Counseling</option>
+                                <option>Child & Adolescent</option>
+                                <option>Addiction Recovery</option>
+                            </select>
+                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                                <option>All Experience Levels</option>
+                                <option>5+ Years</option>
+                                <option>10+ Years</option>
+                                <option>15+ Years</option>
+                            </select>
+                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                                <option>All Availability</option>
+                                <option>Available Now</option>
+                                <option>This Week</option>
+                                <option>Next Week</option>
+                            </select>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            Showing {{ psychologists|length }} psychologists
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Psychologists Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for psychologist in psychologists %}
+                    <div class="psychologist-card panel p-6">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
+                                {{ psychologist.name|first }}
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800">{{ psychologist.name }}</h3>
+                                <p class="text-gray-600">{{ psychologist.specialization }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <p class="text-gray-700 text-sm leading-relaxed">{{ psychologist.bio|truncatewords:20 }}</p>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            {% for tag in psychologist.tags %}
+                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+                            <span>⭐ {{ psychologist.rating }}/5</span>
+                            <span>{{ psychologist.experience }} years experience</span>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <button class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                                View Profile
+                            </button>
+                            <button class="flex-1 px-4 py-2 accent-btn text-white rounded-lg hover:shadow-md transition-all">
+                                Book Session
+                            </button>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full text-center py-12">
+                        <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-4xl text-gray-400">psychology</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">No psychologists found</h3>
+                        <p class="text-gray-600">Try adjusting your filters to see more results.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- CTA Section -->
+                <div class="text-center mt-16">
+                    <div class="panel p-12">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-6">
+                            Ready to Connect with a Therapist?
+                        </h2>
+                        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                            Find the perfect match for your mental health journey. Our team is here to support you.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="{% url 'userend:appointment' %}" class="px-8 py-4 rounded-xl accent-btn text-white font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                                Book Your Session
+                            </a>
+                            <a href="{% url 'loging:CreateAccount' %}" class="px-8 py-4 rounded-xl border border-gray-300 text-gray-700 font-semibold text-lg hover:bg-gray-50 transition-all duration-300">
+                                Create Account
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-8 text-center text-sm text-gray-500">© 2025 MindEase. All rights reserved.</footer>
+    </div>
+</body>
+</html>

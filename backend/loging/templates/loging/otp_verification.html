@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Email Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4; /* cyan */
+            --accent-2: #7c3aed; /* purple */
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(180deg,#f8fdff 0%, #fffaf0 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        /* soft rounded panel like Slice's minimal panels */
+        .panel{
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+            border: 1px solid rgba(124,58,237,0.08);
+            box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+            backdrop-filter: blur(6px) saturate(120%);
+            border-radius: 20px;
+        }
+        .accent-btn{
+            background-image: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+            color: white;
+        }
+        /* subtle rounded hero shape */
+        .hero-shape{position:absolute;right:-8%;top:-12%;width:520px;height:520px;border-radius:50%;background:linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08));filter:blur(30px);pointer-events:none}
+        @media (max-width:640px){.hero-shape{display:none}}
+        
+        /* OTP Input Styling */
+        .otp-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+        .otp-input {
+            width: 48px;
+            height: 48px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid rgba(15,23,42,0.1);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .otp-input:focus {
+            border-color: var(--accent-2);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+            transform: translateY(-2px);
+        }
+        .otp-input.filled {
+            border-color: var(--accent-1);
+            background: rgba(6,182,212,0.05);
+        }
+        .otp-input.error {
+            border-color: #ef4444;
+            background: rgba(239,68,68,0.05);
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Timer styling */
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--accent-2);
+        }
+        .timer.expired {
+            color: #ef4444;
+        }
+        
+        /* Resend button */
+        .resend-btn {
+            background: transparent;
+            border: 1px solid rgba(124,58,237,0.2);
+            color: var(--accent-2);
+            transition: all 0.3s ease;
+        }
+        .resend-btn:hover:not(:disabled) {
+            background: rgba(124,58,237,0.05);
+            border-color: var(--accent-2);
+            transform: translateY(-1px);
+        }
+        .resend-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- top nav -->
+        <header class="w-full py-6 px-6 md:px-12 flex items-center justify-between">
+            <a href="{% url 'userend:home' %}" class="flex items-center gap-3">
+                <!-- MindEase logo - brain and heart symbol -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 3.5a5.5 5.5 0 0 1 6 0l1.5 1a3.5 3.5 0 0 1 1.5 3v3a5.5 5.5 0 0 1-2.5 4.5l-1.5 1a3.5 3.5 0 0 1-4 0l-1.5-1A5.5 5.5 0 0 1 6 10.5v-3a3.5 3.5 0 0 1 1.5-3L9 3.5z" fill="white" opacity="0.95"/>
+                        <path d="M12 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                        <path d="M12 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-800 text-lg">MindEase</span>
+            </a>
+            <div class="flex items-center gap-3">
+                <a href="{% url 'loging:loginView' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800">Sign in</a>
+                <a href="{% url 'loging:CreateAccount' %}" class="px-4 py-2 rounded-lg accent-btn text-white font-medium">Sign up</a>
+            </div>
+        </header>
+
+        <main class="flex-grow flex items-center justify-center relative px-6">
+            <div class="hero-shape"></div>
+
+            <div class="max-w-2xl w-full">
+                <!-- left: illustration / hero text -->
+                <div class="text-center mb-8">
+                    <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                        <span class="material-symbols-outlined text-white text-3xl">mark_email_unread</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-4">Verify Your Email</h1>
+                    <p class="text-gray-600 text-lg mb-2">We've sent a 6-digit verification code to</p>
+                    <p class="font-semibold text-gray-800 text-lg">{{ email|default:"your email address" }}</p>
+                </div>
+
+                <!-- OTP verification panel -->
+                <div class="panel p-8 md:p-10">
+                    <!-- Display Messages -->
+                    {% if messages %}
+                        <div class="mb-6">
+                            {% for message in messages %}
+                                <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% else %}bg-green-100 border border-green-400 text-green-700{% endif %}">
+                                    <div class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-sm">
+                                            {% if message.tags == 'error' %}error{% else %}check_circle{% endif %}
+                                        </span>
+                                        {{ message }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form class="space-y-6" method="post" id="otpForm">
+                        {% csrf_token %}
+                        
+                        <!-- OTP Input Fields -->
+                        <div class="otp-container">
+                            <input type="text" class="otp-input" maxlength="1" data-index="0" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" data-index="1" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" data-index="2" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" data-index="3" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" data-index="4" autocomplete="off">
+                            <input type="text" class="otp-input" maxlength="1" data-index="5" autocomplete="off">
+                        </div>
+                        
+                        <!-- Hidden field to store the complete OTP -->
+                        <input type="hidden" name="otp" id="otpValue" required>
+                        
+                        <!-- Timer and Resend Section -->
+                        <div class="text-center space-y-4">
+                            <div class="flex items-center justify-center gap-2 text-sm text-gray-600">
+                                <span class="material-symbols-outlined text-sm">schedule</span>
+                                <span>Code expires in</span>
+                                <span class="timer" id="timer">05:00</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-center gap-2 text-sm text-gray-500">
+                                <span>Didn't receive the code?</span>
+                                <button type="button" class="resend-btn px-4 py-2 rounded-lg text-sm font-medium" id="resendBtn" disabled>
+                                    Resend Code
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full py-3 rounded-lg accent-btn font-semibold shadow-sm hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed" id="verifyBtn" disabled>
+                            Verify Email
+                        </button>
+
+                        <!-- Back to Registration -->
+                        <div class="text-center">
+                            <a href="{% url 'loging:CreateAccount' %}" class="text-sm text-gray-500 hover:text-gray-700">
+                                ← Back to registration
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Help Section -->
+                <div class="mt-8 text-center text-sm text-gray-500">
+                    <p>Having trouble? Check your spam folder or <a href="#" class="text-purple-600 hover:underline">contact support</a></p>
+                    <p class="mt-2">Interested in joining our team? <a href="{% url 'userend:internship' %}" class="text-purple-600 hover:underline font-medium">View careers</a></p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-8 text-center text-sm text-gray-500">© 2025 MindEase. All rights reserved.</footer>
+    </div>
+
+    <script>
+        class OTPVerification {
+            constructor() {
+                this.otpInputs = document.querySelectorAll('.otp-input');
+                this.otpValue = document.getElementById('otpValue');
+                this.verifyBtn = document.getElementById('verifyBtn');
+                this.resendBtn = document.getElementById('resendBtn');
+                this.timer = document.getElementById('timer');
+                this.timeLeft = 300; // 5 minutes in seconds
+                this.timerInterval = null;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupOTPInputs();
+                this.startTimer();
+                this.setupResendButton();
+            }
+            
+            setupOTPInputs() {
+                this.otpInputs.forEach((input, index) => {
+                    input.addEventListener('input', (e) => this.handleInput(e, index));
+                    input.addEventListener('keydown', (e) => this.handleKeydown(e, index));
+                    input.addEventListener('paste', (e) => this.handlePaste(e));
+                });
+            }
+            
+            handleInput(e, index) {
+                const value = e.target.value;
+                
+                // Only allow numbers
+                if (!/^\d$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+                
+                // Add filled class
+                e.target.classList.add('filled');
+                e.target.classList.remove('error');
+                
+                // Move to next input
+                if (value && index < this.otpInputs.length - 1) {
+                    this.otpInputs[index + 1].focus();
+                }
+                
+                this.updateOTPValue();
+                this.checkFormValidity();
+            }
+            
+            handleKeydown(e, index) {
+                // Handle backspace
+                if (e.key === 'Backspace') {
+                    if (!e.target.value && index > 0) {
+                        this.otpInputs[index - 1].focus();
+                    }
+                    e.target.classList.remove('filled');
+                    this.updateOTPValue();
+                    this.checkFormValidity();
+                }
+                
+                // Handle arrow keys
+                if (e.key === 'ArrowLeft' && index > 0) {
+                    this.otpInputs[index - 1].focus();
+                }
+                if (e.key === 'ArrowRight' && index < this.otpInputs.length - 1) {
+                    this.otpInputs[index + 1].focus();
+                }
+            }
+            
+            handlePaste(e) {
+                e.preventDefault();
+                const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                
+                pastedData.split('').forEach((digit, index) => {
+                    if (index < this.otpInputs.length) {
+                        this.otpInputs[index].value = digit;
+                        this.otpInputs[index].classList.add('filled');
+                        this.otpInputs[index].classList.remove('error');
+                    }
+                });
+                
+                // Focus the next empty input or the last one
+                const nextEmptyIndex = Math.min(pastedData.length, this.otpInputs.length - 1);
+                this.otpInputs[nextEmptyIndex].focus();
+                
+                this.updateOTPValue();
+                this.checkFormValidity();
+            }
+            
+            updateOTPValue() {
+                const otp = Array.from(this.otpInputs).map(input => input.value).join('');
+                this.otpValue.value = otp;
+            }
+            
+            checkFormValidity() {
+                const otp = this.otpValue.value;
+                const isValid = otp.length === 6;
+                
+                this.verifyBtn.disabled = !isValid;
+                
+                if (isValid) {
+                    this.verifyBtn.textContent = 'Verify Email';
+                } else {
+                    this.verifyBtn.textContent = `Enter ${6 - otp.length} more digits`;
+                }
+            }
+            
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    this.timeLeft--;
+                    this.updateTimerDisplay();
+                    
+                    if (this.timeLeft <= 0) {
+                        this.clearTimer();
+                        this.resendBtn.disabled = false;
+                        this.resendBtn.textContent = 'Resend Code';
+                    }
+                }, 1000);
+            }
+            
+            updateTimerDisplay() {
+                const minutes = Math.floor(this.timeLeft / 60);
+                const seconds = this.timeLeft % 60;
+                this.timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (this.timeLeft <= 30) {
+                    this.timer.classList.add('expired');
+                }
+            }
+            
+            clearTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+            
+            setupResendButton() {
+                this.resendBtn.addEventListener('click', () => {
+                    if (!this.resendBtn.disabled) {
+                        this.resendOTP();
+                    }
+                });
+            }
+            
+            resendOTP() {
+                // Reset timer
+                this.timeLeft = 300;
+                this.timer.classList.remove('expired');
+                this.startTimer();
+                
+                // Reset form
+                this.otpInputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('filled', 'error');
+                });
+                this.otpValue.value = '';
+                this.checkFormValidity();
+                
+                // Disable resend button
+                this.resendBtn.disabled = true;
+                this.resendBtn.textContent = 'Code sent!';
+                
+                // Show success message
+                this.showMessage('New verification code sent to your email!', 'success');
+                
+                // Re-enable after 30 seconds
+                setTimeout(() => {
+                    this.resendBtn.disabled = false;
+                    this.resendBtn.textContent = 'Resend Code';
+                }, 30000);
+            }
+            
+            showMessage(message, type) {
+                // Create message element
+                const messageEl = document.createElement('div');
+                messageEl.className = `p-4 rounded-lg mb-6 ${type === 'error' ? 'bg-red-100 border border-red-400 text-red-700' : 'bg-green-100 border border-green-400 text-green-700'}`;
+                messageEl.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">${type === 'error' ? 'error' : 'check_circle'}</span>
+                        ${message}
+                    </div>
+                `;
+                
+                // Insert before form
+                const form = document.getElementById('otpForm');
+                form.parentNode.insertBefore(messageEl, form);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    messageEl.remove();
+                }, 5000);
+            }
+            
+            showError() {
+                this.otpInputs.forEach(input => {
+                    input.classList.add('error');
+                });
+                this.showMessage('Invalid verification code. Please try again.', 'error');
+            }
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new OTPVerification();
+        });
+        
+        // Handle form submission
+        document.getElementById('otpForm').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Show loading state
+            submitBtn.textContent = 'Verifying...';
+            submitBtn.disabled = true;
+            
+            // Let Django handle the form submission
+            // The form will be submitted normally to the Django view
+        });
+    </script>
+</body>
+</html>

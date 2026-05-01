@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Gen Z Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #ff6b6b; /* coral */
+            --accent-2: #4ecdc4; /* teal */
+            --accent-3: #45b7d1; /* blue */
+            --accent-4: #f9ca24; /* yellow */
+            --accent-5: #f0932b; /* orange */
+            --purple: #a55eea;
+            --pink: #ff9ff3;
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        .dashboard-card{
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .nav-item{
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 16px;
+        }
+        .nav-item:hover{
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: white;
+            transform: translateX(8px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.3);
+        }
+        .nav-item.active{
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(4px);
+            box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+        }
+        .live-session{
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+        .live-session:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.4);
+        }
+        .assignment-item{
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+        .assignment-item:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(78,205,196,0.4);
+        }
+        .join-btn{
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .join-btn:hover{
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        .progress-bar{
+            background: linear-gradient(90deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
+            height: 8px;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+        .notes-area{
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 200px;
+        }
+        .calendar-widget{
+            background: linear-gradient(135deg, #45b7d1, #96c93d);
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+            min-height: 200px;
+        }
+        .add-notes-btn{
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .add-notes-btn:hover{
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        .checkbox{
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+        .checkbox.checked{
+            background: white;
+            border-color: white;
+        }
+        .glow-effect{
+            box-shadow: 0 0 20px rgba(255,107,107,0.3);
+        }
+        .bounce-in{
+            animation: bounceIn 0.6s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex">
+        <!-- Left Sidebar -->
+        <div class="w-64 bg-white/10 backdrop-blur-xl border-r border-white/20 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-white/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center glow-effect" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                        <span class="material-symbols-outlined text-white text-xl">psychology</span>
+                    </div>
+                    <span class="font-black text-white text-xl">MindEase</span>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4">
+                <div class="space-y-3">
+                    <a href="#" class="nav-item active flex items-center gap-4 px-4 py-4 rounded-2xl text-white font-semibold bounce-in">
+                        <span class="material-symbols-outlined text-xl">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-4 px-4 py-4 rounded-2xl text-white/80 font-semibold">
+                        <span class="material-symbols-outlined text-xl">task_alt</span>
+                        Tasks
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-4 px-4 py-4 rounded-2xl text-white/80 font-semibold">
+                        <span class="material-symbols-outlined text-xl">description</span>
+                        Submit Report
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-4 px-4 py-4 rounded-2xl text-white/80 font-semibold">
+                        <span class="material-symbols-outlined text-xl">settings</span>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- User Info -->
+            <div class="p-4 border-t border-white/20">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-500 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white">person</span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-white">{{ user.first_name|default:user.username }}</div>
+                        <div class="text-xs text-white/70">Therapist</div>
+                    </div>
+                </div>
+                <a href="{% url 'loging:logout' %}" class="mt-3 flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white/10 backdrop-blur-lg border-b border-white/20 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">Gen Z Dashboard</h1>
+                        <p class="text-white/80">Welcome back, {{ user.first_name|default:user.username }}!</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button class="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
+                            <span class="material-symbols-outlined text-sm mr-2">notifications</span>
+                            Notifications
+                        </button>
+                        <button class="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
+                            <span class="material-symbols-outlined text-sm mr-2">settings</span>
+                            Settings
+                        </button>
+                        <a href="{% url 'loging:logout' %}" class="px-4 py-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors">
+                            <span class="material-symbols-outlined text-sm mr-2">logout</span>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Main Content Area -->
+            <main class="flex-1 p-8">
+                <!-- Top Row: Live Sessions & Assignments -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Live Sessions Widget -->
+                    <div class="dashboard-card p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-2xl font-black text-gray-800">Live Sessions</h2>
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                                <span class="text-sm font-semibold text-red-500">LIVE</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="live-session flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold">Session with Sarah</p>
+                                    <p class="text-sm opacity-90">Anxiety Management</p>
+                                </div>
+                                <button class="join-btn">Join</button>
+                            </div>
+                            
+                            <div class="live-session flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold">Group Therapy</p>
+                                    <p class="text-sm opacity-90">Depression Support</p>
+                                </div>
+                                <button class="join-btn">Join</button>
+                            </div>
+                            
+                            <div class="live-session flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold">Family Session</p>
+                                    <p class="text-sm opacity-90">Relationship Counseling</p>
+                                </div>
+                                <button class="join-btn">Join</button>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 text-center">
+                            <span class="text-sm font-semibold text-gray-600">Ongoing</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Assignments Widget -->
+                    <div class="dashboard-card p-6">
+                        <h2 class="text-2xl font-black text-gray-800 mb-6">Assignments</h2>
+                        
+                        <div class="space-y-3">
+                            <div class="assignment-item flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold">Case Study Review</p>
+                                    <p class="text-sm opacity-90">Due: Tomorrow</p>
+                                </div>
+                                <div class="checkbox"></div>
+                            </div>
+                            
+                            <div class="assignment-item flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold">Progress Report</p>
+                                    <p class="text-sm opacity-90">Due: Friday</p>
+                                </div>
+                                <div class="checkbox"></div>
+                            </div>
+                            
+                            <div class="assignment-item flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold">Client Assessment</p>
+                                    <p class="text-sm opacity-90">Due: Next Week</p>
+                                </div>
+                                <div class="checkbox"></div>
+                            </div>
+                            
+                            <div class="assignment-item flex items-center justify-between">
+                                <div>
+                                    <p class="font-bold">Training Module</p>
+                                    <p class="text-sm opacity-90">Due: End of Month</p>
+                                </div>
+                                <div class="checkbox"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Middle Row: Notes & Calendar -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Notes Widget -->
+                    <div class="dashboard-card p-6">
+                        <h2 class="text-2xl font-black text-gray-800 mb-6">Notes</h2>
+                        <div class="notes-area">
+                            <div class="h-32 flex items-center justify-center">
+                                <p class="text-white/70 font-medium">Your notes will appear here...</p>
+                            </div>
+                        </div>
+                        <button class="add-notes-btn mt-4 w-full">
+                            + Add notes
+                        </button>
+                    </div>
+                    
+                    <!-- Calendar Widget -->
+                    <div class="dashboard-card p-6">
+                        <h2 class="text-2xl font-black text-gray-800 mb-6">Calendar</h2>
+                        <div class="calendar-widget">
+                            <div class="h-32 flex items-center justify-center">
+                                <p class="text-white/70 font-medium">Calendar view will appear here...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: Progress Bar -->
+                <div class="dashboard-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-black text-gray-800">Progress</h2>
+                        <span class="text-3xl font-black text-gray-800">25%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                        <div class="progress-bar w-1/4 h-full"></div>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <span class="text-sm font-semibold text-gray-600">Progress bar</span>
+                        <span class="text-sm font-semibold text-gray-600">25% Complete</span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Checkbox interactions
+            const checkboxes = document.querySelectorAll('.checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    this.classList.toggle('checked');
+                });
+            });
+            
+            // Join button interactions
+            const joinBtns = document.querySelectorAll('.join-btn');
+            joinBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.textContent = 'Joined!';
+                    this.style.background = 'rgba(255,255,255,0.4)';
+                });
+            });
+            
+            // Add notes functionality
+            const addNotesBtn = document.querySelector('.add-notes-btn');
+            addNotesBtn.addEventListener('click', function() {
+                const notesArea = document.querySelector('.notes-area');
+                const newNote = document.createElement('div');
+                newNote.innerHTML = '<p class="text-white font-medium">New note added!</p>';
+                notesArea.appendChild(newNote);
+            });
+        });
+        
+        // Session Management and Auto-logout on Browser Close
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up session monitoring
+            let sessionWarningShown = false;
+            
+            // Function to show session warning
+            function showSessionWarning() {
+                if (!sessionWarningShown) {
+                    sessionWarningShown = true;
+                    const warning = document.createElement('div');
+                    warning.id = 'session-warning';
+                    warning.className = 'fixed top-4 right-4 bg-yellow-500/90 backdrop-blur-lg border border-yellow-400 text-white px-4 py-3 rounded-lg shadow-lg z-50';
+                    warning.innerHTML = `
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined mr-2">warning</span>
+                            <span>Your session will expire when you close the browser.</span>
+                            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-yellow-200 hover:text-white">×</button>
+                        </div>
+                    `;
+                    document.body.appendChild(warning);
+                    
+                    // Auto-hide after 5 seconds
+                    setTimeout(() => {
+                        if (warning.parentElement) {
+                            warning.remove();
+                        }
+                    }, 5000);
+                }
+            }
+            
+            // Show warning after 30 seconds
+            setTimeout(showSessionWarning, 30000);
+            
+            // Handle browser close/refresh
+            window.addEventListener('beforeunload', function(e) {
+                // Optional: Show confirmation dialog
+                // e.preventDefault();
+                // e.returnValue = 'Are you sure you want to leave? Your session will be logged out.';
+            });
+            
+            // Monitor for session expiry
+            setInterval(function() {
+                // Check if session is still valid by making a lightweight request
+                fetch(window.location.href, {
+                    method: 'HEAD',
+                    credentials: 'same-origin'
+                }).catch(function() {
+                    // Session might be expired, redirect to login
+                    window.location.href = '{% url "loging:loginView" %}';
+                });
+            }, 60000); // Check every minute
+        });
+    </script>
+</body>
+</html>

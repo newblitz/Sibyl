@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4; /* cyan */
+            --accent-2: #7c3aed; /* purple */
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: #fafafa;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        .dashboard-card{
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .stat-card{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .stat-card-2{
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .nav-item{
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover{
+            background: #f3f4f6;
+            transform: translateX(2px);
+        }
+        .nav-item.active{
+            background: #1f2937;
+            color: white;
+        }
+        .calendar-grid{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .calendar-day{
+            background: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .calendar-day:hover{
+            background: #f3f4f6;
+        }
+        .calendar-day.today{
+            background: #3b82f6;
+            color: white;
+        }
+        .calendar-day.has-appointment{
+            background: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex">
+        <!-- Left Sidebar -->
+        <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                        <span class="material-symbols-outlined text-white text-lg">psychology</span>
+                    </div>
+                    <a href="{% url 'userend:home' %}"><span class="font-bold text-gray-800 text-lg">MindEase</span>
+                </a></div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4">
+                <div class="space-y-2">
+                    <a href="{% url 'loging:counsellor' %}" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a href="{% url 'Counsellordashboard:appointments' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">event</span>
+                        Today's Sessions
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">school</span>
+                        Interns
+                    </a>
+                    <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">assignment</span>
+                        Case Review
+                    </a>
+                    <a href="{% url 'Counsellordashboard:pending_approval' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">pending_actions</span>
+                        Pending Approval
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- User Info -->
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-gray-600">person</span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-gray-800">{{ user.first_name|default:user.username }}</div>
+                        <div class="text-xs text-gray-500">{{ user.user_type|title }}</div>
+                    </div>
+                </div>
+                <a href="{% url 'loging:logout' %}" class="mt-3 flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+                        <p class="text-gray-500">Welcome back, {{ user.first_name|default:user.username }}!</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                            <span class="material-symbols-outlined text-sm mr-2">notifications</span>
+                            Notifications
+                        </button>
+                        <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                            <span class="material-symbols-outlined text-sm mr-2">settings</span>
+                            Settings
+                        </button>
+                        <a href="{% url 'loging:logout' %}" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors">
+                            <span class="material-symbols-outlined text-sm mr-2">logout</span>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 p-6 bg-gray-50">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="stat-card dashboard-card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-90">Completed Today</p>
+                                <p class="text-3xl font-bold">{{ daily_patient_count_completed }}</p>
+                                <p class="text-xs opacity-80 mt-1">Sessions finished</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl opacity-80">check_circle</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-2 dashboard-card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-90">Remaining Today</p>
+                                <p class="text-3xl font-bold">{{ dailypatient_count_remaining }}</p>
+                                <p class="text-xs opacity-80 mt-1">Sessions pending</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl opacity-80">schedule</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-90">This Week</p>
+                                <p class="text-3xl font-bold">{{ this_week_total_sessions }}</p>
+                                <p class="text-xs opacity-80 mt-1">Total Sessions</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl opacity-80">calendar_month</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Section -->
+                <div class="dashboard-card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800">Calendar</h2>
+                        <div class="flex items-center gap-2">
+                            <button class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">Today</button>
+                            <button class="px-3 py-1 text-sm text-gray-500 hover:bg-gray-100 rounded-lg">Week</button>
+                            <button class="px-3 py-1 text-sm text-gray-500 hover:bg-gray-100 rounded-lg">Month</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Calendar Grid -->
+                    <div class="calendar-grid">
+                        <!-- Calendar Headers -->
+                        <div class="calendar-day bg-gray-100 font-medium text-gray-600">Sun</div>
+                        <div class="calendar-day bg-gray-100 font-medium text-gray-600">Mon</div>
+                        <div class="calendar-day bg-gray-100 font-medium text-gray-600">Tue</div>
+                        <div class="calendar-day bg-gray-100 font-medium text-gray-600">Wed</div>
+                        <div class="calendar-day bg-gray-100 font-medium text-gray-600">Thu</div>
+                        <div class="calendar-day bg-gray-100 font-medium text-gray-600">Fri</div>
+                        <div class="calendar-day bg-gray-100 font-medium text-gray-600">Sat</div>
+                        
+                        <!-- Calendar Days -->
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                        <div class="calendar-day">4</div>
+                        <div class="calendar-day">5</div>
+                        <div class="calendar-day has-appointment">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                        <div class="calendar-day">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                    <div class="dashboard-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Today's Appointments</h3>
+                            <a href="{% url 'Counsellordashboard:appointments' %}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View All →</a>
+                        </div>
+                        <div class="space-y-4">
+                            {% if Recent_appointments %}
+                                {% for appointment in Recent_appointments %}
+                                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-white text-sm">person</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-800">{{ appointment.patient_id.first_name }} {{ appointment.patient_id.last_name }}</p>
+                                        <p class="text-sm text-gray-500">{{ appointment.time_slot }} - {{ appointment.patient_id.session_type|title }}</p>
+                                    </div>
+                                    {% if appointment.completed %}
+                                        <span class="text-sm text-green-600 font-medium flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                                            Completed
+                                        </span>
+                                    {% else %}
+                                        <span class="text-sm text-orange-600 font-medium flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-sm">schedule</span>
+                                            Pending
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-center py-8">
+                                    <span class="material-symbols-outlined text-gray-300 text-5xl mb-2">event_busy</span>
+                                    <p class="text-gray-500">No appointments scheduled for today</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Quick Actions</h3>
+                        </div>
+                        <div class="space-y-3">
+                            <a href="{% url 'Counsellordashboard:appointments' %}" class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white text-sm">event</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">View Today's Sessions</p>
+                                    <p class="text-xs text-gray-500">Manage your appointments</p>
+                                </div>
+                            </a>
+                            
+                            <a href="{% url 'Counsellordashboard:pending_approval' %}" class="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-yellow-500 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white text-sm">pending_actions</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Pending Approvals</p>
+                                    <p class="text-xs text-gray-500">Review appointment requests</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                                <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white text-sm">school</span>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Manage Interns</p>
+                                    <p class="text-xs text-gray-500">Supervise intern progress</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Add today's date highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().getDate();
+            const calendarDays = document.querySelectorAll('.calendar-day');
+            
+            calendarDays.forEach(day => {
+                if (day.textContent == today) {
+                    day.classList.add('today');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

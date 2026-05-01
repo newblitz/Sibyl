@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Appointment Pending</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4; /* cyan */
+            --accent-2: #7c3aed; /* purple */
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(180deg,#f8fdff 0%, #fffaf0 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        /* soft rounded panel like Slice's minimal panels */
+        .panel{
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+            border: 1px solid rgba(124,58,237,0.08);
+            box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+            backdrop-filter: blur(6px) saturate(120%);
+            border-radius: 20px;
+        }
+        .accent-btn{
+            background-image: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+            color: white;
+        }
+        /* subtle rounded hero shape */
+        .hero-shape{position:absolute;right:-8%;top:-12%;width:520px;height:520px;border-radius:50%;background:linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08));filter:blur(30px);pointer-events:none}
+        @media (max-width:640px){.hero-shape{display:none}}
+        
+        /* Pending animation */
+        .pending-icon {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        .clock {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 2;
+            stroke: #f59e0b;
+            stroke-miterlimit: 10;
+            margin: 0 auto;
+            box-shadow: inset 0px 0px 0px #f59e0b;
+            animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+        }
+        
+        .clock circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 2;
+            stroke-miterlimit: 10;
+            stroke: #f59e0b;
+            fill: none;
+            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+        
+        .clock path {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+        }
+        
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+        
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 30px #f59e0b;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- top nav -->
+        <header class="w-full py-6 px-6 md:px-12 flex items-center justify-between">
+            <a href="{% url 'userend:home' %}" class="flex items-center gap-3">
+                <!-- MindEase logo - brain and heart symbol -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 3.5a5.5 5.5 0 0 1 6 0l1.5 1a3.5 3.5 0 0 1 1.5 3v3a5.5 5.5 0 0 1-2.5 4.5l-1.5 1a3.5 3.5 0 0 1-4 0l-1.5-1A5.5 5.5 0 0 1 6 10.5v-3a3.5 3.5 0 0 1 1.5-3L9 3.5z" fill="white" opacity="0.95"/>
+                        <path d="M12 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                        <path d="M12 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-800 text-lg">MindEase</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm text-gray-600">
+                <!-- <a href="{% url 'userend:know_more' %}" class="hover:text-gray-800">How It Works</a>
+                <a href="#" class="hover:text-gray-800">Psychologists</a> -->
+                <a href="{% url 'userend:internship' %}" class="hover:text-gray-800">Careers</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                {% if user.is_authenticated %}
+                    <span class="text-gray-600">Welcome, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'loging:logout' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">Logout</a>
+                {% else %}
+                    <a href="{% url 'loging:loginView' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800">Sign in</a>
+                    <a href="{% url 'loging:CreateAccount' %}" class="px-4 py-2 rounded-lg accent-btn text-white font-medium">Sign up</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="flex-grow flex items-center justify-center relative px-6">
+            <div class="hero-shape"></div>
+
+            <div class="max-w-2xl w-full">
+                <div class="panel p-8 md:p-12 text-center">
+                    <!-- Pending Icon -->
+                    <div class="mb-8">
+                        <svg class="clock" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="clock-circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="clock-path" fill="none" d="M26 12v14l8 4"/>
+                        </svg>
+                    </div>
+
+                    <!-- Pending Message -->
+                    <div class="mb-8">
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Appointment Pending</h1>
+                        <p class="text-lg text-gray-600 mb-6">Your appointment request is being reviewed by our team. We'll contact you shortly with confirmation.</p>
+                    </div>
+
+                    <!-- Pending Status -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-8">
+                        <h3 class="text-lg font-semibold text-yellow-800 mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined">schedule</span>
+                            Current Status
+                        </h3>
+                        <div class="text-yellow-700">
+                            <div class="flex items-center justify-center gap-3 mb-4">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                                <span class="font-medium text-lg">Pending Approval</span>
+                            </div>
+                            <p class="text-sm">Your appointment request has been submitted and is awaiting confirmation from the counselor.</p>
+                        </div>
+                    </div>
+
+                    <!-- What happens next -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-8 text-left">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">What happens next?</h3>
+                        <ul class="space-y-3 text-gray-600">
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-yellow-500">schedule</span>
+                                <span>We'll review your appointment request</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-yellow-500">schedule</span>
+                                <span>Our counselor will check their availability</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-yellow-500">schedule</span>
+                                <span>You'll receive a confirmation within 24 hours</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-yellow-500">schedule</span>
+                                <span>If approved, you'll get your appointment details</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Alternative Options -->
+                    <div class="bg-blue-50 rounded-lg p-6 mb-8">
+                        <h3 class="text-lg font-semibold text-blue-800 mb-3">Need immediate assistance?</h3>
+                        <p class="text-blue-700 mb-4">If you need to speak with someone urgently, consider booking a different time slot or contacting our support team.</p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="{% url 'userend:appointment' %}" class="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors">
+                                <span class="material-symbols-outlined text-blue-500">event</span>
+                                <span>Book Different Time</span>
+                            </a>
+                            <a href="tel:+1234567890" class="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors">
+                                <span class="material-symbols-outlined text-blue-500">phone</span>
+                                <span>Call Support</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="{% url 'userend:home' %}" class="px-6 py-3 rounded-lg accent-btn font-semibold shadow-sm hover:shadow-md transition-all">
+                            Back to Home
+                        </a>
+                        <a href="{% url 'userend:appointment' %}" class="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-all">
+                            Book Another Appointment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-8 text-center text-sm text-gray-500">© 2025 MindEase. All rights reserved.</footer>
+    </div>
+
+    <script>
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate the pending icon
+            const clock = document.querySelector('.clock');
+            if (clock) {
+                setTimeout(() => {
+                    clock.style.opacity = '1';
+                }, 100);
+            }
+            
+            // Add a subtle pulse to the main content
+            const panel = document.querySelector('.panel');
+            if (panel) {
+                panel.style.animation = 'fadeInUp 0.6s ease-out';
+            }
+        });
+        
+        // Add CSS for fadeInUp animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

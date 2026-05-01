@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — HR Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4;
+            --accent-2: #7c3aed;
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: #fafafa;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        .dashboard-card{
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .dashboard-card:hover{
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .stat-card-1{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .stat-card-2{
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .stat-card-3{
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        .nav-item{
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover{
+            background: #f3f4f6;
+            transform: translateX(2px);
+        }
+        .nav-item.active{
+            background: #1f2937;
+            color: white;
+        }
+        .calendar-grid{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .calendar-day{
+            background: white;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .calendar-day:hover{
+            background: #f3f4f6;
+        }
+        .calendar-day.today{
+            background: #3b82f6;
+            color: white;
+            font-weight: 600;
+        }
+        .calendar-day.has-event{
+            background: #10b981;
+            color: white;
+        }
+        .profile-badge{
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex">
+        <!-- Left Sidebar -->
+        <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                        <span class="material-symbols-outlined text-white text-lg">business_center</span>
+                    </div>
+                    <span class="font-bold text-gray-800 text-lg">MindEase HR</span>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 p-4">
+                <div class="space-y-2">
+                    <a href="{% url 'loging:hr_dashboard' %}" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a href="{% url 'HRDashbaord:PastJobs' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">work</span>
+                        Past Jobs
+                    </a>
+                    <a href="{% url 'HRDashbaord:JobResponses' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">mail</span>
+                        Responses
+                    </a>
+                    <a href="{% url 'HRDashbaord:post_job' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">person_add</span>
+                        Post New Job
+                    </a>
+                    <a href="{% url 'userend:internship' %}" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">visibility</span>
+                        View Public Jobs
+                    </a>
+                    <!-- <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">groups</span>
+                        Candidates
+                    </a> -->
+                    <!-- <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 font-medium">
+                        <span class="material-symbols-outlined text-lg">analytics</span>
+                        Analytics
+                    </a> -->
+                </div>
+            </nav>
+            
+            <!-- User Info & Logout -->
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-gray-600">person</span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-gray-800">{{ user.first_name|default:user.username }}</div>
+                        <div class="text-xs text-gray-500">HR Manager</div>
+                    </div>
+                </div>
+                <a href="{% url 'loging:logout' %}" class="mt-3 flex items-center gap-2 text-sm text-red-600 hover:text-red-700 font-medium">
+                    <span class="material-symbols-outlined text-sm">logout</span>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">HR Dashboard</h1>
+                        <p class="text-gray-500">Welcome back, {{ user.first_name|default:user.username }}!</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button onclick="location.reload()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">refresh</span>
+                            Refresh
+                        </button>
+                        <a href="#" class="profile-badge">
+                            {{ user.first_name.0|default:"H"|upper }}
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 p-6 bg-gray-50 overflow-y-auto">
+                <!-- Stats Cards Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Doctors Present Card -->
+                    <div class="stat-card-1 dashboard-card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-90 mb-1">Doctors Present</p>
+                                <p class="text-4xl font-bold mb-1">{{ no_of_doctor_present }}</p>
+                                <p class="text-xs opacity-80">Present today</p>
+                            </div>
+                            <span class="material-symbols-outlined text-5xl opacity-80">person_check</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Doctors Absent Card -->
+                    <div class="stat-card-2 dashboard-card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-90 mb-1">Doctors Absent</p>
+                                <p class="text-4xl font-bold mb-1">{{ no_of_doctor_absent }}</p>
+                                <p class="text-xs opacity-80">Absent today</p>
+                            </div>
+                            <span class="material-symbols-outlined text-5xl opacity-80">person_off</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Appointments Completed Card -->
+                    <div class="stat-card-3 dashboard-card p-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-90 mb-1">Completed Today</p>
+                                <p class="text-4xl font-bold mb-1">{{ no_of_appointmet_completed }}</p>
+                                <p class="text-xs opacity-80">Sessions finished</p>
+                            </div>
+                            <span class="material-symbols-outlined text-5xl opacity-80">check_circle</span>
+                        </div>
+                    </div>
+
+                    <!-- Appointments Scheduled Card -->
+                    <div class="dashboard-card p-6 bg-gradient-to-br from-orange-500 to-red-600 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm opacity-90 mb-1">Scheduled Today</p>
+                                <p class="text-4xl font-bold mb-1">{{ no_of_appointmet_scheduled }}</p>
+                                <p class="text-xs opacity-80">Pending sessions</p>
+                            </div>
+                            <span class="material-symbols-outlined text-5xl opacity-80">schedule</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Section -->
+                <div class="dashboard-card p-6 mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-blue-600">calendar_month</span>
+                            Interview Calendar
+                        </h2>
+                        <div class="flex items-center gap-2">
+                            <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">Today</button>
+                            <button class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Week</button>
+                            <button class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">Month</button>
+                            <button class="ml-2 px-4 py-1 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">add</span>
+                                Schedule Interview
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Calendar Grid -->
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-700">October 2025</h3>
+                            <div class="flex gap-2">
+                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined">chevron_left</span>
+                                </button>
+                                <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                                    <span class="material-symbols-outlined">chevron_right</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <!-- Calendar Headers -->
+                        <div class="calendar-day bg-gray-100 font-semibold text-gray-600">Sun</div>
+                        <div class="calendar-day bg-gray-100 font-semibold text-gray-600">Mon</div>
+                        <div class="calendar-day bg-gray-100 font-semibold text-gray-600">Tue</div>
+                        <div class="calendar-day bg-gray-100 font-semibold text-gray-600">Wed</div>
+                        <div class="calendar-day bg-gray-100 font-semibold text-gray-600">Thu</div>
+                        <div class="calendar-day bg-gray-100 font-semibold text-gray-600">Fri</div>
+                        <div class="calendar-day bg-gray-100 font-semibold text-gray-600">Sat</div>
+                        
+                        <!-- Calendar Days -->
+                        <div class="calendar-day text-gray-400">29</div>
+                        <div class="calendar-day text-gray-400">30</div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                        <div class="calendar-day">4</div>
+                        <div class="calendar-day">5</div>
+                        <div class="calendar-day">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day today">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day has-event">14</div>
+                        <div class="calendar-day has-event">15</div>
+                        <div class="calendar-day">16</div>
+                        <div class="calendar-day">17</div>
+                        <div class="calendar-day">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day">20</div>
+                        <div class="calendar-day has-event">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                        <div class="calendar-day text-gray-400">1</div>
+                        <div class="calendar-day text-gray-400">2</div>
+                    </div>
+                    
+                    <!-- Calendar Legend -->
+                    <div class="flex items-center gap-6 mt-4 text-sm">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 bg-blue-600 rounded"></div>
+                            <span class="text-gray-600">Today</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 bg-green-600 rounded"></div>
+                            <span class="text-gray-600">Interview Scheduled</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Section - Recent Activity & Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Job Applications by Position -->
+                    <div class="dashboard-card p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-purple-600">summarize</span>
+                                Job Applications (Active Postings)
+                            </h3>
+                            <a href="{% url 'userend:internship' %}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View All →</a>
+                        </div>
+                        {% if job_count %}
+                        <div class="space-y-4">
+                            {% for job in job_count %}
+                            <div class="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg hover:from-purple-100 hover:to-pink-100 transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-white font-bold text-lg">
+                                        {{ job.count }}
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-gray-800">{{ job.name }}</p>
+                                        <p class="text-sm text-gray-600">Active applications</p>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-gray-400">arrow_forward</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-8">
+                            <span class="material-symbols-outlined text-gray-300 text-5xl mb-2">inbox</span>
+                            <p class="text-gray-500">No active job postings with applications</p>
+                            <a href="{% url 'HRDashbaord:post_job' %}" class="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">
+                                <span class="material-symbols-outlined text-sm">add</span>
+                                Post New Job
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="dashboard-card p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-orange-600">bolt</span>
+                            Quick Actions
+                        </h3>
+                        <div class="space-y-3">
+                            <a href="{% url 'HRDashbaord:post_job' %}" class="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg hover:from-blue-100 hover:to-blue-200 transition-all">
+                                <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white">post_add</span>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Post New Job</p>
+                                    <p class="text-xs text-gray-600">Create a new job listing</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg hover:from-purple-100 hover:to-purple-200 transition-all">
+                                <div class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white">rate_review</span>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Review Applications</p>
+                                    <p class="text-xs text-gray-600">45 pending reviews</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg hover:from-green-100 hover:to-green-200 transition-all">
+                                <div class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-white">event</span>
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-800">Schedule Interview</p>
+                                    <p class="text-xs text-gray-600">Book interview slots</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Floating Logout Button -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <a href="{% url 'loging:logout' %}" class="flex items-center gap-2 px-4 py-3 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition-all duration-300 hover:shadow-xl hover:scale-105">
+            <span class="material-symbols-outlined text-sm">logout</span>
+            <span class="text-sm font-medium">Logout</span>
+        </a>
+    </div>
+
+    <script>
+        // Add interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight today's date
+            const today = new Date().getDate();
+            const calendarDays = document.querySelectorAll('.calendar-day');
+            
+            // Calendar day click handler
+            calendarDays.forEach(day => {
+                day.addEventListener('click', function() {
+                    if (!this.classList.contains('bg-gray-100')) {
+                        alert('Selected date: ' + this.textContent);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+

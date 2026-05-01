@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Application Submitted</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .checkmark-animation {
+            animation: checkmark 0.6s ease-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <!-- Confetti Effects -->
+        <div class="confetti" style="left: 10%; animation-delay: 0s; background: #ff6b6b;"></div>
+        <div class="confetti" style="left: 20%; animation-delay: 0.3s; background: #4ecdc4;"></div>
+        <div class="confetti" style="left: 30%; animation-delay: 0.6s; background: #ffe66d;"></div>
+        <div class="confetti" style="left: 40%; animation-delay: 0.9s; background: #a8e6cf;"></div>
+        <div class="confetti" style="left: 50%; animation-delay: 1.2s; background: #ff6b6b;"></div>
+        <div class="confetti" style="left: 60%; animation-delay: 1.5s; background: #dda0dd;"></div>
+        <div class="confetti" style="left: 70%; animation-delay: 1.8s; background: #4ecdc4;"></div>
+        <div class="confetti" style="left: 80%; animation-delay: 2.1s; background: #ffe66d;"></div>
+        <div class="confetti" style="left: 90%; animation-delay: 2.4s; background: #a8e6cf;"></div>
+
+        <div class="max-w-2xl mx-auto w-full">
+            <div class="bg-white rounded-3xl shadow-2xl p-12 text-center fade-in-up">
+                <!-- Success Icon -->
+                <div class="mb-8">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center checkmark-animation shadow-xl">
+                        <span class="material-symbols-outlined text-white text-5xl">check_circle</span>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">Application Submitted Successfully! 🎉</h1>
+                <p class="text-lg text-gray-600 mb-8">Thank you for applying to join the MindEase team. We're excited to review your application!</p>
+
+                <!-- What Happens Next -->
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8 mb-8 text-left">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-purple-600">timeline</span>
+                        What Happens Next?
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">1</div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Application Review</h3>
+                                <p class="text-sm text-gray-600">Our HR team will review your application within 3-5 business days.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">2</div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Initial Screening</h3>
+                                <p class="text-sm text-gray-600">Shortlisted candidates will be contacted via email for an initial screening call.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">3</div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Interview Process</h3>
+                                <p class="text-sm text-gray-600">Qualified candidates will be invited for interviews with our team.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold">4</div>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Final Decision</h3>
+                                <p class="text-sm text-gray-600">We'll notify you of our decision within 2 weeks of your final interview.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Application Details -->
+                <div class="bg-gray-50 rounded-xl p-6 mb-8 text-left">
+                    <h3 class="font-semibold text-gray-800 mb-3">Application Details:</h3>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex justify-between">
+                            <span>Application ID:</span>
+                            <span class="font-mono font-semibold text-purple-600">#APP{{ application_id|default:"12345" }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Submitted:</span>
+                            <span class="font-semibold">{{ submitted_date|default:"October 11, 2025" }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Position:</span>
+                            <span class="font-semibold">{{ job_title|default:"Counsellor" }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Note -->
+                <div class="bg-blue-50 border-l-4 border-blue-600 p-4 mb-8 text-left">
+                    <div class="flex gap-3">
+                        <span class="material-symbols-outlined text-blue-600">info</span>
+                        <div>
+                            <h4 class="font-semibold text-blue-800 mb-1">Important Note</h4>
+                            <p class="text-sm text-blue-700">Please check your email (including spam folder) regularly. We'll send all updates about your application to the email address you provided.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{% url 'HRDashbaord:internship' %}" class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all font-semibold shadow-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">work</span>
+                        View More Opportunities
+                    </a>
+                    <a href="{% url 'userend:home' %}" class="flex-1 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all font-semibold flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">home</span>
+                        Back to Home
+                    </a>
+                </div>
+
+                <!-- Social Share -->
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <p class="text-sm text-gray-600 mb-3">Share your achievement!</p>
+                    <div class="flex gap-3 justify-center">
+                        <button class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors">
+                            <span class="text-sm">f</span>
+                        </button>
+                        <button class="w-10 h-10 rounded-full bg-blue-400 text-white flex items-center justify-center hover:bg-blue-500 transition-colors">
+                            <span class="text-sm">𝕏</span>
+                        </button>
+                        <button class="w-10 h-10 rounded-full bg-blue-700 text-white flex items-center justify-center hover:bg-blue-800 transition-colors">
+                            <span class="text-sm">in</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto redirect after 30 seconds
+        setTimeout(function() {
+            const redirect = confirm('Would you like to view more job opportunities?');
+            if (redirect) {
+                window.location.href = "{% url 'HRDashbaord:internship' %}";
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
+

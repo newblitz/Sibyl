@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Create Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4; /* cyan */
+            --accent-2: #7c3aed; /* purple */
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(180deg,#f8fdff 0%, #fffaf0 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        /* soft rounded panel like Slice's minimal panels */
+        .panel{
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+            border: 1px solid rgba(124,58,237,0.08);
+            box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+            backdrop-filter: blur(6px) saturate(120%);
+            border-radius: 20px;
+        }
+        .accent-btn{
+            background-image: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+            color: white;
+        }
+        /* subtle rounded hero shape */
+        .hero-shape{position:absolute;right:-8%;top:-12%;width:520px;height:520px;border-radius:50%;background:linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08));filter:blur(30px);pointer-events:none}
+        @media (max-width:640px){.hero-shape{display:none}}
+        
+        /* Form field animations */
+        .field{position:relative}
+        .field input, .field select{background:transparent;padding:16px 14px;border-radius:12px;border:1px solid rgba(15,23,42,0.06);width:100%;font-size:15px;transition:all .15s ease}
+        .field input:focus, .field select:focus{border-color:var(--accent-2);box-shadow:0 0 8px rgba(124,58,237,0.2);outline:none}
+        
+        /* Gender selection styling */
+        .gender-option input[type="radio"] { display: none; }
+        .gender-option label {
+            display: block;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.8);
+            border: 2px solid rgba(15,23,42,0.06);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .gender-option input[type="radio"]:checked + label {
+            border-color: var(--accent-2);
+            background: rgba(124,58,237,0.1);
+            color: var(--accent-2);
+        }
+        .gender-option label:hover {
+            border-color: var(--accent-2);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- top nav -->
+        <header class="w-full py-6 px-6 md:px-12 flex items-center justify-between">
+            <a href="{% url 'userend:home' %}" class="flex items-center gap-3">
+                <!-- MindEase logo - brain and heart symbol -->
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 3.5a5.5 5.5 0 0 1 6 0l1.5 1a3.5 3.5 0 0 1 1.5 3v3a5.5 5.5 0 0 1-2.5 4.5l-1.5 1a3.5 3.5 0 0 1-4 0l-1.5-1A5.5 5.5 0 0 1 6 10.5v-3a3.5 3.5 0 0 1 1.5-3L9 3.5z" fill="white" opacity="0.95"/>
+                        <path d="M12 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                        <path d="M12 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-800 text-lg">MindEase</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm text-gray-600">
+                <!-- <a href="{% url 'userend:know-more' %}" class="hover:text-gray-800">How it works</a> -->
+                <!-- <a href="#" class="hover:text-gray-800">Psychologists</a> -->
+                <a href="{% url 'userend:register' %}" class="px-4 py-2 rounded-lg border border-transparent hover:border-gray-200">Get Started</a>
+            </nav>
+            <div class="flex items-center gap-3">
+                <a href="{% url 'userend:login' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800">Sign in</a>
+                <a href="{% url 'userend:register' %}" class="px-4 py-2 rounded-lg accent-btn text-white font-medium">Sign up</a>
+            </div>
+        </header>
+
+        <main class="flex-grow flex items-center justify-center relative px-6">
+            <div class="hero-shape"></div>
+
+            <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                <!-- left: illustration / hero text -->
+                <div class="px-2 md:px-0">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 leading-tight">Join MindEase — Start Your Wellness Journey</h1>
+                    <p class="mt-4 text-gray-600 text-lg">Create your account and connect with professional therapists who can help you achieve better mental health and well-being.</p>
+
+                    <ul class="mt-8 space-y-3">
+                        <li class="flex items-center gap-3 text-gray-700">
+                            <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(6,182,212,0.08)">
+                                <span class="material-symbols-outlined text-lg text-cyan-500">verified</span>
+                            </div>
+                            <span class="text-gray-700">Licensed & certified therapists</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-700">
+                            <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(124,58,237,0.06)">
+                                <span class="material-symbols-outlined text-lg text-purple-500">security</span>
+                            </div>
+                            <span class="text-gray-700">100% confidential & secure</span>
+                        </li>
+                        <li class="flex items-center gap-3 text-gray-700">
+                            <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(6,182,212,0.08)">
+                                <span class="material-symbols-outlined text-lg text-cyan-500">schedule</span>
+                            </div>
+                            <span class="text-gray-700">Flexible scheduling options</span>
+                        </li>
+                    </ul>
+
+                    <div class="mt-8 text-sm text-gray-500">Already have an account? <a href="{% url 'userend:login' %}" class="font-semibold text-gray-800">Sign in here</a></div>
+                </div>
+
+                <!-- right: registration panel -->
+                <div class="panel p-8 md:p-10">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800">Create Account</h2>
+                            <p class="text-sm text-gray-500 mt-1">Join our community of wellness seekers</p>
+                        </div>
+                    </div>
+
+                    <form class="space-y-4" action="#" method="post">
+                         {% csrf_token %}
+                        
+                         {{ user_form.as_p }}
+                         {{ profile_form.as_p }}
+                         <!-- <div class="field">
+                             <input id="name" name="name" type="text" placeholder="Full Name" class="w-full" required />
+                         </div> -->
+
+                        <!-- Age and Phone Row -->
+                        <!-- <div class="grid grid-cols-2 gap-4">
+                            <div class="field"> --> -->
+                                <!-- <input id="age" name="age" type="number" placeholder="Age" min="18" max="100" class="w-full" required />
+                            </div>
+                            <div class="field">
+                                <input id="phone" name="phone" type="tel" placeholder="Phone Number" class="w-full" required />
+                            </div>
+                        </div>
+
+                        <!-- Gender Selection -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">Gender</label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="gender-option">
+                                    <input type="radio" id="male" name="gender" value="male" required />
+                                    <label for="male">Male</label>
+                                </div>
+                                <div class="gender-option">
+                                    <input type="radio" id="female" name="gender" value="female" /> -->
+                                    <!-- <label for="female">Female</label>
+                                </div>
+                                <div class="gender-option">
+                                    <input type="radio" id="non-binary" name="gender" value="non-binary" />
+                                    <label for="non-binary">Non-Binary</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="field">
+                            <input id="email" name="email" type="email" placeholder="Email Address" class="w-full" required />
+                        </div>
+
+                        <!-- Password -->
+                        <div class="field">
+                            <input id="password" name="password" type="password" placeholder="Password" class="w-full" required />
+                        </div> -->
+
+                        <!-- Terms and Conditions -->
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="terms" name="terms" class="w-4 h-4 rounded border-gray-300" required />
+                            <label for="terms" class="text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-purple-600 hover:underline">Terms of Service</a> and 
+                                <a href="#" class="text-purple-600 hover:underline">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full py-3 rounded-lg accent-btn font-semibold shadow-sm hover:shadow-md transition-all">
+                            Create Account
+                        </button>
+
+                        <!-- Social Login Options -->
+                        <div class="text-center mt-2">
+                            <span class="text-sm text-gray-500">or continue with</span>
+                            <div class="mt-3 flex gap-3 justify-center">
+                                <button type="button" class="px-4 py-2 border rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M21 12.79A9 9 0 1 0 10.21 3" stroke="#374151" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Google
+                                </button>
+                                <button type="button" class="px-4 py-2 border rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 5v14M5 12h14" stroke="#374151" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Demo
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="mt-6 text-center text-sm text-gray-500">
+                        By creating an account, you agree to our <a href="#" class="text-gray-800 font-medium">Terms</a> and 
+                        <a href="#" class="text-gray-800 font-medium">Privacy Policy</a>.
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-8 text-center text-sm text-gray-500">© 2025 MindEase. All rights reserved.</footer>
+    </div>
+
+    <script>
+        // Phone number formatting
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 10) {
+                value = value.substring(0, 10);
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            }
+            e.target.value = value;
+        });
+
+        // Form submission handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Show loading state
+            submitBtn.textContent = 'Creating Account...';
+            submitBtn.disabled = true;
+            
+            // Simulate form submission (replace with actual form handling)
+            setTimeout(() => {
+                alert('Account created successfully! Welcome to MindEase.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                this.reset();
+            }, 2000);
+        });
+
+        // Enhanced input animations
+        const inputs = document.querySelectorAll('.field input, .field select');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

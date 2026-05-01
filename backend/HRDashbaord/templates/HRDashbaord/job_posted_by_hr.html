@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post New Job - MindEase HR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .accent-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .accent-btn:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 12c0-4.418 3.582-8 8-8v8H4z" fill="white" opacity="0.95"/>
+                            </svg>
+                        </div>
+                        <span class="font-semibold text-gray-800 text-lg">MindEase HR</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-600">Welcome, {{ user.first_name|default:user.username }}</span>
+                        <a href="{% url 'loging:logout' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Breadcrumb -->
+            <nav class="flex mb-8" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="{% url 'loging:hr_dashboard' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                            HR Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Post New Job</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <!-- Messages -->
+            {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                        <div class="p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-100 text-red-800 border border-red-200{% else %}bg-blue-100 text-blue-800 border border-blue-200{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Job Posting Form -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                <span class="material-icons text-blue-600">work</span>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-900">Post New Job Opening</h2>
+                                <p class="text-sm text-gray-600">Create a new job posting for potential candidates</p>
+                            </div>
+                        </div>
+
+                        <form method="post" enctype="multipart/form-data" class="space-y-6">
+                            {% csrf_token %}
+                            
+                            <!-- Job Title and Location -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="{{ form.job_title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Job Title *
+                                    </label>
+                                    {{ form.job_title }}
+                                    {% if form.job_title.errors %}
+                                        <div class="mt-1 text-sm text-red-600">{{ form.job_title.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.job_location.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Location *
+                                    </label>
+                                    {{ form.job_location }}
+                                    {% if form.job_location.errors %}
+                                        <div class="mt-1 text-sm text-red-600">{{ form.job_location.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Job Description -->
+                            <div>
+                                <label for="{{ form.job_description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Job Description *
+                                </label>
+                                {{ form.job_description }}
+                                {% if form.job_description.errors %}
+                                    <div class="mt-1 text-sm text-red-600">{{ form.job_description.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Job Type and Salary -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="{{ form.job_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Job Type *
+                                    </label>
+                                    {{ form.job_type }}
+                                    {% if form.job_type.errors %}
+                                        <div class="mt-1 text-sm text-red-600">{{ form.job_type.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.job_salary.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Salary Range (₹) *
+                                    </label>
+                                    {{ form.job_salary }}
+                                    {% if form.job_salary.errors %}
+                                        <div class="mt-1 text-sm text-red-600">{{ form.job_salary.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Job Duration and Experience -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="{{ form.job_duration.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Job Duration (months) *
+                                    </label>
+                                    {{ form.job_duration }}
+                                    {% if form.job_duration.errors %}
+                                        <div class="mt-1 text-sm text-red-600">{{ form.job_duration.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div>
+                                    <label for="{{ form.job_experience.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Required Experience (years) *
+                                    </label>
+                                    {{ form.job_experience }}
+                                    {% if form.job_experience.errors %}
+                                        <div class="mt-1 text-sm text-red-600">{{ form.job_experience.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Last Date to Apply -->
+                            <div>
+                                <label for="{{ form.last_date_to_apply.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Last Date to Apply *
+                                </label>
+                                {{ form.last_date_to_apply }}
+                                {% if form.last_date_to_apply.errors %}
+                                    <div class="mt-1 text-sm text-red-600">{{ form.last_date_to_apply.errors.0 }}</div>
+                                {% endif %}
+                                <p class="mt-1 text-xs text-gray-500">Applications will be accepted until this date</p>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-200">
+                                <a href="{% url 'loging:hr_dashboard' %}" class="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors">
+                                    Cancel
+                                </a>
+                                <button type="submit" class="px-6 py-2 accent-btn text-white rounded-lg font-medium hover:shadow-lg transition-all">
+                                    Post Job Opening
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Posted Jobs List -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                                <span class="material-icons text-green-600">list</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Posted Jobs</h3>
+                                <p class="text-sm text-gray-600">{{ posted_jobs.count }} active posting{{ posted_jobs.count|pluralize }}</p>
+                            </div>
+                        </div>
+
+                        {% if posted_jobs %}
+                            <div class="space-y-4">
+                                {% for job in posted_jobs %}
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <h4 class="font-medium text-gray-900 text-sm">{{ job.job_title }}</h4>
+                                            <span class="text-xs text-gray-500">{{ job.job_posted_date|date:"M d" }}</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600 mb-2">{{ job.job_location }} • {{ job.job_type }}</p>
+                                        <div class="space-y-1 mb-3">
+                                            <div class="flex items-center gap-2 text-xs text-gray-500">
+                                                <span class="material-icons text-xs">schedule</span>
+                                                <span>{{ job.job_duration }} months</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-xs text-gray-500">
+                                                <span class="material-icons text-xs">work_history</span>
+                                                <span>{{ job.job_experience }} years exp.</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-xs text-gray-500">
+                                                <span class="material-icons text-xs">event</span>
+                                                <span>Apply by {{ job.last_date_to_apply|date:"M d, Y" }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Active
+                                            </span>
+                                            <span class="text-xs text-gray-500">{{ job.job_applied_count }} application{{ job.job_applied_count|pluralize }}</span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <span class="material-icons text-gray-400 text-2xl">work_outline</span>
+                                </div>
+                                <p class="text-gray-500 text-sm">No jobs posted yet</p>
+                                <p class="text-gray-400 text-xs mt-1">Create your first job posting using the form</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add form styling and validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const formInputs = document.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.classList.add('w-full', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-lg', 'focus:ring-2', 'focus:ring-blue-500', 'focus:border-blue-500', 'transition-colors');
+            });
+            
+            // Add specific styling for textarea
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => {
+                textarea.classList.add('resize-none', 'h-24');
+            });
+
+            // Add client-side validation for numeric fields
+            const salaryInput = document.querySelector('input[name="job_salary"]');
+            const durationInput = document.querySelector('input[name="job_duration"]');
+            const experienceInput = document.querySelector('input[name="job_experience"]');
+            const dateInput = document.querySelector('input[name="last_date_to_apply"]');
+            const form = document.querySelector('form');
+
+            // Real-time validation feedback
+            function validateNumericField(input, minValue, errorMessage) {
+                const value = parseFloat(input.value);
+                const errorDiv = input.parentNode.querySelector('.validation-error');
+                
+                if (input.value && (isNaN(value) || value < minValue)) {
+                    input.classList.add('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+                    input.classList.remove('border-gray-300', 'focus:ring-blue-500', 'focus:border-blue-500');
+                    
+                    if (!errorDiv) {
+                        const error = document.createElement('div');
+                        error.className = 'validation-error mt-1 text-sm text-red-600';
+                        error.textContent = errorMessage;
+                        input.parentNode.appendChild(error);
+                    }
+                    return false;
+                } else {
+                    input.classList.remove('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+                    input.classList.add('border-gray-300', 'focus:ring-blue-500', 'focus:border-blue-500');
+                    
+                    if (errorDiv) {
+                        errorDiv.remove();
+                    }
+                    return true;
+                }
+            }
+
+            // Add event listeners for real-time validation
+            if (salaryInput) {
+                salaryInput.addEventListener('input', function() {
+                    validateNumericField(this, 0, 'Salary cannot be negative');
+                });
+            }
+
+            if (durationInput) {
+                durationInput.addEventListener('input', function() {
+                    validateNumericField(this, 1, 'Job duration must be at least 1 month');
+                });
+            }
+
+            if (experienceInput) {
+                experienceInput.addEventListener('input', function() {
+                    validateNumericField(this, 0, 'Experience cannot be negative');
+                });
+            }
+
+            // Date validation
+            if (dateInput) {
+                dateInput.addEventListener('change', function() {
+                    const selectedDate = new Date(this.value);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    const errorDiv = this.parentNode.querySelector('.validation-error');
+                    
+                    if (this.value && selectedDate <= today) {
+                        this.classList.add('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+                        this.classList.remove('border-gray-300', 'focus:ring-blue-500', 'focus:border-blue-500');
+                        
+                        if (!errorDiv) {
+                            const error = document.createElement('div');
+                            error.className = 'validation-error mt-1 text-sm text-red-600';
+                            error.textContent = 'Last date to apply must be in the future';
+                            this.parentNode.appendChild(error);
+                        }
+                    } else {
+                        this.classList.remove('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+                        this.classList.add('border-gray-300', 'focus:ring-blue-500', 'focus:border-blue-500');
+                        
+                        if (errorDiv) {
+                            errorDiv.remove();
+                        }
+                    }
+                });
+            }
+
+            // Form submission validation
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    let isValid = true;
+
+                    if (salaryInput && !validateNumericField(salaryInput, 0, 'Salary cannot be negative')) {
+                        isValid = false;
+                    }
+
+                    if (durationInput && !validateNumericField(durationInput, 1, 'Job duration must be at least 1 month')) {
+                        isValid = false;
+                    }
+
+                    if (experienceInput && !validateNumericField(experienceInput, 0, 'Experience cannot be negative')) {
+                        isValid = false;
+                    }
+
+                    // Date validation on submit
+                    if (dateInput && dateInput.value) {
+                        const selectedDate = new Date(dateInput.value);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        
+                        if (selectedDate <= today) {
+                            isValid = false;
+                            if (!dateInput.parentNode.querySelector('.validation-error')) {
+                                const error = document.createElement('div');
+                                error.className = 'validation-error mt-1 text-sm text-red-600';
+                                error.textContent = 'Last date to apply must be in the future';
+                                dateInput.parentNode.appendChild(error);
+                            }
+                        }
+                    }
+
+                    if (!isValid) {
+                        e.preventDefault();
+                        alert('Please fix the validation errors before submitting the form.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

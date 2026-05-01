@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase — Our Initiatives</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        :root{
+            --accent-1: #06b6d4; /* cyan */
+            --accent-2: #7c3aed; /* purple */
+            --muted: #6b7280;
+        }
+        html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+        body{
+            background: linear-gradient(180deg,#f8fdff 0%, #fffaf0 100%);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        .panel{
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));
+            border: 1px solid rgba(124,58,237,0.08);
+            box-shadow: 0 8px 30px rgba(16,24,40,0.06);
+            backdrop-filter: blur(6px) saturate(120%);
+            border-radius: 20px;
+        }
+        .accent-btn{
+            background-image: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+            color: white;
+        }
+        .hero-shape{position:absolute;right:-8%;top:-12%;width:520px;height:520px;border-radius:50%;background:linear-gradient(135deg, rgba(124,58,237,0.12), rgba(6,182,212,0.08));filter:blur(30px);pointer-events:none}
+        @media (max-width:640px){.hero-shape{display:none}}
+        
+        .initiative-card {
+            transition: all 0.3s ease;
+        }
+        .initiative-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(16,24,40,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="w-full py-6 px-6 md:px-12 flex items-center justify-between">
+            <a href="{% url 'userend:home' %}" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,var(--accent-1),var(--accent-2));">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 3.5a5.5 5.5 0 0 1 6 0l1.5 1a3.5 3.5 0 0 1 1.5 3v3a5.5 5.5 0 0 1-2.5 4.5l-1.5 1a3.5 3.5 0 0 1-4 0l-1.5-1A5.5 5.5 0 0 1 6 10.5v-3a3.5 3.5 0 0 1 1.5-3L9 3.5z" fill="white" opacity="0.95"/>
+                        <path d="M12 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                        <path d="M12 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" fill="white" opacity="0.8"/>
+                    </svg>
+                </div>
+                <span class="font-semibold text-gray-800 text-lg">MindEase</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm text-gray-600">
+                <!-- <a href="{% url 'loging:how-it-works' %}" class="hover:text-gray-800">How it works</a> -->
+                <!-- <a href="{% url 'loging:list-psychologists' %}" class="hover:text-gray-800">Psychologists</a> -->
+                <a href="{% url 'userend:internship' %}" class="hover:text-gray-800">Careers</a>
+                <!-- <a href="{% url 'loging:CreateAccount' %}" class="px-4 py-2 rounded-lg border border-transparent hover:border-gray-200">Get Started</a> -->
+            </nav>
+            <div class="flex items-center gap-3">
+                {% if user.is_authenticated %}
+                    <span class="text-gray-600">Welcome, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'loging:logout' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50">Logout</a>
+                {% else %}
+                    <a href="{% url 'loging:loginView' %}" class="px-4 py-2 text-gray-600 hover:text-gray-800">Sign in</a>
+                    <a href="{% url 'loging:CreateAccount' %}" class="px-4 py-2 rounded-lg accent-btn text-white font-medium">Sign up</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <main class="flex-grow relative px-6">
+            <div class="hero-shape"></div>
+
+            <div class="max-w-6xl mx-auto pt-20 pb-20">
+                <!-- Hero Section -->
+                <div class="text-center mb-20">
+                    <h1 class="text-5xl md:text-6xl font-bold text-gray-800 leading-tight mb-6">
+                        Our 
+                        <span class="bg-gradient-to-r from-cyan-500 to-purple-600 bg-clip-text text-transparent">Initiatives</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                        We are committed to making mental health care accessible, affordable, and empowering 
+                        for both clients and future mental health professionals.
+                    </p>
+                </div>
+
+                <!-- Mission Statement -->
+                <div class="panel p-12 mb-16">
+                    <div class="text-center">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-6">
+                            Our Mission
+                        </h2>
+                        <p class="text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto">
+                            MindEase aims to provide therapy at minimal cost and create internship opportunities 
+                            for psychology students to empower them with hands-on experience, making therapy 
+                            affordable and accessible for all while promoting mindfulness and mental health awareness.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Key Initiatives -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <!-- Affordable Therapy -->
+                    <div class="initiative-card panel p-8">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-6" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(124,58,237,0.1));">
+                            <span class="material-symbols-outlined text-3xl text-cyan-500">favorite</span>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Affordable Therapy for All</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            We believe mental health care should be accessible to everyone, regardless of their 
+                            financial situation. Our sliding scale pricing ensures that quality therapy is 
+                            available to all members of our community.
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Sliding scale pricing based on income</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Free initial consultations</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Insurance acceptance and payment plans</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Student Internship Program -->
+                    <div class="initiative-card panel p-8">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-6" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(124,58,237,0.1));">
+                            <span class="material-symbols-outlined text-3xl text-purple-500">school</span>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Psychology Student Internship Program</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            We provide hands-on experience to psychology students, empowering them with 
+                            real-world skills while contributing to affordable mental health care. 
+                            Our supervised internship program bridges the gap between academic learning and practice.
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Supervised clinical experience</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Mentorship from licensed professionals</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Academic credit and certification</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Mindfulness & Mental Health -->
+                    <div class="initiative-card panel p-8">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-6" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(124,58,237,0.1));">
+                            <span class="material-symbols-outlined text-3xl text-green-500">self_improvement</span>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Mindfulness & Mental Health Promotion</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            We actively promote mindfulness practices and mental health awareness through 
+                            community programs, workshops, and educational resources. Our goal is to 
+                            destigmatize mental health and create a supportive community.
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Free mindfulness workshops</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Mental health awareness campaigns</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Community support groups</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Accessibility & Inclusion -->
+                    <div class="initiative-card panel p-8">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-6" style="background: linear-gradient(135deg, rgba(6,182,212,0.1), rgba(124,58,237,0.1));">
+                            <span class="material-symbols-outlined text-3xl text-blue-500">accessibility</span>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Accessibility & Inclusion</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            We are committed to making mental health care accessible to all communities, 
+                            including underserved populations. Our platform supports multiple languages, 
+                            cultural sensitivity, and various accessibility needs.
+                        </p>
+                        <ul class="space-y-2 text-gray-700">
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Multilingual support</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Cultural competency training</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-green-500 text-sm">check_circle</span>
+                                <span>Accessibility accommodations</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Impact Statistics -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                    <div class="panel p-8 text-center">
+                        <div class="text-4xl font-bold text-cyan-500 mb-2">500+</div>
+                        <div class="text-gray-600">Students Trained</div>
+                    </div>
+                    <div class="panel p-8 text-center">
+                        <div class="text-4xl font-bold text-purple-500 mb-2">2,000+</div>
+                        <div class="text-gray-600">Sessions Provided</div>
+                    </div>
+                    <div class="panel p-8 text-center">
+                        <div class="text-4xl font-bold text-green-500 mb-2">85%</div>
+                        <div class="text-gray-600">Cost Reduction</div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="text-center">
+                    <div class="panel p-12">
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-6">
+                            Join Our Mission
+                        </h2>
+                        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                            Whether you're seeking affordable therapy or looking to gain hands-on experience 
+                            in psychology, we invite you to be part of our community.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="{% url 'loging:CreateAccount' %}" class="px-8 py-4 rounded-xl accent-btn text-white font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                                Get Started
+                            </a>
+                            <a href="{% url 'userend:internship' %}" class="px-8 py-4 rounded-xl border border-gray-300 text-gray-700 font-semibold text-lg hover:bg-gray-50 transition-all duration-300">
+                                Apply for Internship
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="py-8 text-center text-sm text-gray-500">© 2025 MindEase. All rights reserved.</footer>
+    </div>
+</body>
+</html>

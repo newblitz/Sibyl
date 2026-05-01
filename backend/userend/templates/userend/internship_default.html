@@ -1,0 +1,95 @@
+<!-- Default view when no job openings are available -->
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-2xl p-12 text-center">
+        <!-- Animated Icon -->
+        <div class="mb-8 animate-bounce">
+            <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-5xl">work_off</span>
+            </div>
+        </div>
+        
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">No Job Openings Right Now</h2>
+        <p class="text-lg text-gray-600 mb-8">We appreciate your interest in joining MindEase! Currently, we don't have any open positions, but exciting opportunities are on the horizon.</p>
+        
+        <!-- What to do next -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="p-6 bg-purple-50 rounded-xl">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-600 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white text-2xl">notifications_active</span>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">Stay Updated</h3>
+                <p class="text-sm text-gray-600">Subscribe to our newsletter for job alerts</p>
+            </div>
+            
+            <div class="p-6 bg-pink-50 rounded-xl">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-pink-600 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white text-2xl">groups</span>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">Join Our Community</h3>
+                <p class="text-sm text-gray-600">Connect with us on social media</p>
+            </div>
+            
+            <div class="p-6 bg-blue-50 rounded-xl">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-600 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white text-2xl">contact_mail</span>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">General Application</h3>
+                <p class="text-sm text-gray-600">Send us your resume for future openings</p>
+            </div>
+        </div>
+        
+        <!-- Fun Facts Section -->
+        <div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl p-8 mb-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">💡 Did You Know?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div>
+                    <div class="text-3xl font-bold text-purple-600 mb-1">500+</div>
+                    <div class="text-sm text-gray-600">Patients Helped</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-pink-600 mb-1">50+</div>
+                    <div class="text-sm text-gray-600">Professional Counsellors</div>
+                </div>
+                <div>
+                    <div class="text-3xl font-bold text-blue-600 mb-1">4.8★</div>
+                    <div class="text-sm text-gray-600">Average Rating</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Motivational Quote -->
+        <div class="mb-8">
+            <blockquote class="text-lg italic text-gray-600">
+                "The best time to plant a tree was 20 years ago. The second best time is now."
+            </blockquote>
+            <p class="text-sm text-gray-500 mt-2">— Chinese Proverb</p>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all font-medium shadow-lg">
+                Get Job Alerts
+            </a>
+            <a href="{% url 'userend:home' %}" class="px-8 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all font-medium">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(-5%);
+            animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+        }
+        50% {
+            transform: translateY(0);
+            animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        }
+    }
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+</style>
+

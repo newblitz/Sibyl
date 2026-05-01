@@ -1,0 +1,257 @@
+.features {
+  padding: var(--spacing-3xl) 0;
+  position: relative;
+  background: var(--color-background);
+}
+
+.features-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.features-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto var(--spacing-3xl);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-bottom: var(--spacing-3xl);
+}
+
+.feature-card {
+  padding: 2rem;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  transition: all 0.3s var(--transition-smooth);
+}
+
+.feature-card:hover {
+  border-color: var(--color-text-secondary);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.feature-icon-container {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+  color: var(--color-text);
+}
+
+.feature-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-text);
+}
+
+.feature-description {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.features-spotlight {
+  margin-top: var(--spacing-3xl);
+}
+
+.spotlight-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  padding: var(--spacing-3xl) 0;
+}
+
+.spotlight-visual {
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spotlight-glow {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(
+    circle,
+    rgba(14, 165, 233, 0.2),
+    transparent 70%
+  );
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.spotlight-card {
+  position: relative;
+  z-index: 1;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.therapist-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.therapist-title {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.status-badge {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #059669;
+  background: #d1fae5;
+  border-radius: 2rem;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.spotlight-text {
+  max-width: 500px;
+}
+
+.spotlight-text h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.spotlight-text p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text);
+  transition: gap 0.2s var(--transition-smooth);
+}
+
+.btn-link:hover {
+  gap: 0.75rem;
+}
+
+@media (max-width: 1024px) {
+  .spotlight-content {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .spotlight-visual {
+    order: 2;
+  }
+
+  .spotlight-text {
+    order: 1;
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .features {
+    padding: var(--spacing-2xl) 0;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .spotlight-visual {
+    height: 300px;
+  }
+
+  .spotlight-card {
+    max-width: 100%;
+  }
+
+  .spotlight-text h3 {
+    font-size: 1.5rem;
+  }
+
+  .spotlight-text p {
+    font-size: 1rem;
+  }
+}
